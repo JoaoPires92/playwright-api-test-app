@@ -4,7 +4,24 @@ import { test, expect } from '@playwright/test';
 //API URl: https://conduit-api.bondaracademy.com
 
 test.beforeEach(async ({page})=>{
-await page.goto('https://conduit.bondaracademy.com/')
+  // Call to mock API before the test
+  await page.route('https://conduit-api.bondaracademy.com/api/tags', async route =>{
+    const tags = {
+      "tags": [
+          "Joao",
+          "Pires",
+          "Playwright",
+          "Udemy",
+          "Course"
+      ]
+  }
+    await route.fulfill({
+      body:JSON.stringify(tags)
+    })
+
+  })
+
+  await page.goto('https://conduit.bondaracademy.com/')
 
 })
 
