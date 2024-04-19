@@ -1,0 +1,14 @@
+{
+  "name": "playwright-api-test-app",
+  "version": "1.0.0",
+  "description": "Playwright API testing as part of the Udemy Training \"Playwright from zero to Hero\" - Section 7",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.43.1",
+    "@types/node": "^20.12.7"
+  }
+}
