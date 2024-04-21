@@ -1,31 +1,39 @@
 import { test, expect } from '@playwright/test';
+import tags from '../test-data/tags.json'
 
 //APP URl: https://conduit.bondaracademy.com 
 //API URl: https://conduit-api.bondaracademy.com
 
 test.beforeEach(async ({page})=>{
   // Call to mock API before the test
-  await page.route('https://conduit-api.bondaracademy.com/api/tags', async route =>{
-    const tags = {
-      "tags": [
-          "Joao",
-          "Pires",
-          "Playwright",
-          "Udemy",
-          "Course"
-      ]
-  }
+  await page.route('*/**/api/tags', async route =>{
     await route.fulfill({
-      body:JSON.stringify(tags)
+      body: JSON.stringify(tags)
     })
 
   })
 
-  await page.goto('https://conduit.bondaracademy.com/')
+  await page.goto('https://conduit.bondaracademy.com')
 
 })
 
 test('first test', async ({ page }) => {
+
+  await page.route('*/**/api/articles*', async route =>{
+    const response = await route.fetch()
+    const responseBody = response.json
+    responseBody.arguments[0].title = "This is a test title"
+    responseBody.arguments[0].description = "This is a description"
+
+    await route.fulfill({
+      body: JSON.stringify(responseBody)
+    })
+
+  })
+  await page.getByText('Global Feed').click()
   await expect(page.locator('.navbar-brand')).toHaveText('conduit')
+  await expect(page.locator('.preview-link h1').first()).toContainText('This is a test title')
+  await expect(page.locator('app-article-list p').first()).toContainText('This is a description')
+
 });
 
